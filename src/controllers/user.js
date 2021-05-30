@@ -1,13 +1,12 @@
 const User = require("../models/User");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 exports.register = async (req, res, next) => {
   const userEmail = await User.findOne({ email: req.body.email });
-  if (userEmail)
-    return res.status(400).send({ Error: "User already registered" });
+  if (userEmail) return next(new ErrorResponse("User already registered", 400));
 
   const userName = await User.findOne({ email: req.body.username });
-  if (userName)
-    return res.status(400).send({ Error: "User already registered" });
+  if (userName) return next(new ErrorResponse("User already registered", 400));
 
   const _user = new User(req.body);
   try {
@@ -16,11 +15,6 @@ exports.register = async (req, res, next) => {
       .status(201)
       .send({ success: true, message: "User created Successfully" });
   } catch (err) {
-    if (err) {
-      console.log(err);
-      return res
-        .status(400)
-        .send({ Error: "Something went wrong, User not registered" });
-    }
+    next("Something went wrong, User could not be registered", 500);
   }
 };

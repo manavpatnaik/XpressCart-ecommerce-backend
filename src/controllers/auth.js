@@ -25,7 +25,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!(await user.authenticate(password)))
     return next(new ErrorResponse("Invalid Password", 400));
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ user: user }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 

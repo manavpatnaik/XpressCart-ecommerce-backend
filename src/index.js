@@ -5,7 +5,7 @@ const connectDB = require("../config/db");
 const errorHandler = require("./middleware/error");
 
 // Routes
-const userRoutes = require("./routes/user");
+const userRoutes = require("./routes/auth");
 
 dotenv.config();
 

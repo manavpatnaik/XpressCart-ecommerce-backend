@@ -7,6 +7,7 @@ const errorHandler = require("./middleware/error");
 // Routes
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin/auth");
+const categoryRoutes = require("./routes/category");
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ connectDB();
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/auth/admin", adminRoutes);
+app.use("/api/category", categoryRoutes);
 app.use(errorHandler);
 
 app.get("/", (req, res, next) => {

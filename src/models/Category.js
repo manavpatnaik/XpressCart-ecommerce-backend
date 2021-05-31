@@ -12,10 +12,12 @@ const CategorySchema = new mongoose.Schema(
       required: true,
     },
     parentId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
     },
   },
   { timestamps: true }
 );
 
 const Category = mongoose.model("Category", CategorySchema);
+
+module.exports = Category;

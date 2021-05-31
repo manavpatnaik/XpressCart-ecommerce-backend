@@ -10,7 +10,7 @@ const requireLogin = (req, res, next) => {
   try {
     user = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
-    next(new ErrorResponse(err.message, 400));
+    next(new ErrorResponse("Invalid Token", 400));
   }
 
   req.user = user;

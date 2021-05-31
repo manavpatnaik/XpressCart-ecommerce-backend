@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const ErrorResponse = require("../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
+const asyncHandler = require("../middleware/asyncHandler");
 
-exports.register = async (req, res, next) => {
+exports.register = asyncHandler(async (req, res, next) => {
   const userEmail = await User.findOne({ email: req.body.email });
   if (userEmail)
     return next(new ErrorResponse("Email already registered", 400));
@@ -12,23 +13,11 @@ exports.register = async (req, res, next) => {
     return next(new ErrorResponse("Username already registered", 400));
 
   const _user = new User(req.body);
-  try {
-    await _user.save();
-    res
-      .status(201)
-      .send({ success: true, message: "User created Successfully" });
-  } catch (err) {
-    console.log(err.message);
-    next(
-      new ErrorResponse(
-        "Something went wrong, User could not be registered",
-        500
-      )
-    );
-  }
-};
+  await _user.save();
+  res.status(201).send({ success: true, message: "User created Successfully" });
+});
 
-exports.login = async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return next(new ErrorResponse("User not registered", 400));
@@ -46,4 +35,4 @@ exports.login = async (req, res, next) => {
     token,
     user: { _id, fullName, username, email, role },
   });
-};
+});

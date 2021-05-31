@@ -57,9 +57,14 @@ UserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(password, salt);
 });
 
+UserSchema.virtual("fullName").get(function () {
+  return `${this.firstName} ${this.lastName}`;
+});
+
 UserSchema.methods = {
   authenticate: async function (password) {
-    return await bcrypt.compare(password, this.hash_password);
+    const isValid = await bcrypt.compare(password, this.password);
+    return isValid;
   },
 };
 

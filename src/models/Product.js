@@ -23,7 +23,7 @@ const ProductSchema = new mongoose.Schema(
     offer: {
       type: Number,
     },
-    productPictures: [{ img: { type: String } }],
+    productImages: [{ img: { type: String } }],
     reviews: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

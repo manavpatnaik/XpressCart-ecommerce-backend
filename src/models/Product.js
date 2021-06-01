@@ -20,6 +20,10 @@ const ProductSchema = new mongoose.Schema(
       required: [true, "Product description is required"],
       trim: true,
     },
+    quantity: {
+      type: Number,
+      required: [true, "Product quantity required"],
+    },
     offer: {
       type: Number,
     },

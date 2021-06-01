@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const connectDB = require("../config/db");
 const errorHandler = require("./middleware/error");
+const path = require("path");
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -17,6 +18,7 @@ connectDB();
 
 // Route middleware
 app.use(express.json());
+app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/auth/admin", adminRoutes);
 app.use("/api/category", categoryRoutes);

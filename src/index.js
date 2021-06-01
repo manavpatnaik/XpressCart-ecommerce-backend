@@ -8,27 +8,21 @@ const errorHandler = require("./middleware/error");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin/auth");
 const categoryRoutes = require("./routes/category");
+const productRoutes = require("./routes/product");
 
 dotenv.config();
-
 const app = express();
-
 connectDB();
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/auth/admin", adminRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/product", productRoutes);
 app.use(errorHandler);
 
 app.get("/", (req, res, next) => {
   res.status(200).send({ msg: "Hello World" });
-});
-
-app.post("/", (req, res, next) => {
-  res.status(200).send({
-    msg: req.body,
-  });
 });
 
 const PORT = process.env.PORT || 8000;

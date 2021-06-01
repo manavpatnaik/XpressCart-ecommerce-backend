@@ -1,6 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const Product = require("../models/Product");
-const shortId = require("shortid");
 const slugify = require("slugify");
 
 exports.createProduct = asyncHandler(async (req, res, next) => {

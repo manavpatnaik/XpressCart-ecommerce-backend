@@ -36,9 +36,13 @@ exports.login = async (req, res, next) => {
   if (!(await user.authenticate(password)) && user.role === "admin")
     return next(new ErrorResponse("Invalid Password", 400));
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  const token = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    }
+  );
 
   const { _id, fullName, username, role } = user;
 

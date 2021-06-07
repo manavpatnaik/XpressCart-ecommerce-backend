@@ -1,8 +1,9 @@
 const User = require("../../models/User");
 const ErrorResponse = require("../../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
+const asyncHandler = require("../../middleware/asyncHandler");
 
-exports.register = async (req, res, next) => {
+exports.register = asyncHandler(async (req, res, next) => {
   const userEmail = await User.findOne({ email: req.body.email });
   if (userEmail)
     return next(new ErrorResponse("Admin Email already registered", 400));
@@ -26,9 +27,9 @@ exports.register = async (req, res, next) => {
       )
     );
   }
-};
+});
 
-exports.login = async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return next(new ErrorResponse("Admin not registered", 400));
@@ -46,8 +47,14 @@ exports.login = async (req, res, next) => {
 
   const { _id, fullName, username, role } = user;
 
+  res.cookie("token", token, { expiresIn: process.env.TOKEN_COOKIE });
   res.status(200).send({
     token,
     admin: { _id, fullName, username, email, role },
   });
-};
+});
+
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.clearCookie("token");
+  res.status(200).send({ message: "Successfully Logged out" });
+});

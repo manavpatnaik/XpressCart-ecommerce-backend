@@ -4,6 +4,7 @@ const colors = require("colors");
 const connectDB = require("../config/db");
 const errorHandler = require("./middleware/error");
 const path = require("path");
+const cors = require("cors");
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -17,6 +18,7 @@ const app = express();
 connectDB();
 
 // Route middleware
+app.use(cors());
 app.use(express.json());
 app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);

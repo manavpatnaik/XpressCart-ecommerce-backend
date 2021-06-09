@@ -62,3 +62,58 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
 });
 
 exports.createCategories = createCategories;
+
+exports.updateCategory = asyncHandler(async (req, res, next) => {
+  const { name, parentId } = req.body;
+  if (!name) return next(new ErrorResponse("Nothing to update", 400));
+  const updatedCategories = [];
+  if (name instanceof Array) {
+    for (let i = 0; i < name.length; i++) {
+      const category = {
+        name: name[i],
+        slug: slugify(name[i]),
+      };
+      if (parentId[i]) {
+        category.parentId = parentId[i];
+      }
+
+      const updatedCategory = await Category.findOneAndUpdate(
+        { name: name[i] },
+        category,
+        { new: true }
+      );
+      updatedCategories.push(updatedCategory);
+    }
+    return res.status(200).send(updatedCategories);
+  } else {
+    const category = {
+      name,
+    };
+    if (parentId) {
+      category.parentId = parentId;
+    }
+    const updatedCategory = await Category.findOneAndUpdate(
+      { name },
+      category,
+      { new: true }
+    );
+    res.status(200).send({ updatedCategory });
+  }
+});
+
+exports.deleteCategory = asyncHandler(async (req, res, next) => {
+  const { ids } = req.body;
+  const deletedCategories = [];
+  if (ids instanceof Array) {
+    console.log(ids);
+    for (let i = 0; i < ids.length; i++) {
+      const category = await Category.findOneAndDelete({ _id: ids[i] });
+      deletedCategories.push(category);
+    }
+  } else {
+    const category = await Category.findOneAndDelete({ _id: ids });
+    deletedCategories.push(category);
+  }
+
+  res.status(200).send({ deletedCategories });
+});

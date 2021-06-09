@@ -60,3 +60,5 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
   res.status(200).send(nestedCategories);
   // res.status(200).send(categories);
 });
+
+exports.createCategories = createCategories;

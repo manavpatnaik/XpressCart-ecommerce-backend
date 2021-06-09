@@ -1,9 +1,11 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const Product = require("../models/Product");
+const Category = require("../models/Category");
+const { createCategories } = require("./category");
 const slugify = require("slugify");
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
-  const { name, price, description, category, quantity,  } = req.body;
+  const { name, price, description, category, quantity } = req.body;
 
   let productImages = [];
   if (req.files.length > 0) {
@@ -25,4 +27,21 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 
   const product = await _product.save();
   res.status(200).json({ product });
+});
+
+exports.getInitialData = asyncHandler(async (req, res, next) => {
+  const categories = await Category.find();
+  const products = await Product.find()
+    .select("_id name price quantity description productImages category")
+    .populate("category");
+  const data = {
+    categories: createCategories(categories),
+    products,
+  };
+  res.status(200).send(data);
+});
+
+exports.getProductBySlug = asyncHandler(async (req, res, next) => {
+  const { slug } = req.params;
+  res.status(200).send({ slug });
 });

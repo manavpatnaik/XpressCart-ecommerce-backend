@@ -1,5 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const colors = require("colors");
 const connectDB = require("../config/db");
 const errorHandler = require("./middleware/error");
@@ -13,7 +12,10 @@ const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/product");
 const cartRoutes = require("./routes/cart");
 
-dotenv.config();
+if (process.env.NODE_ENV === "production") {
+  const dotenv = require("dotenv");
+  dotenv.config();
+}
 const app = express();
 connectDB();
 

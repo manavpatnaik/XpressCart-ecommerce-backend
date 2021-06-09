@@ -3,6 +3,7 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const { createCategories } = require("./category");
 const slugify = require("slugify");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
   const { name, price, description, category, quantity } = req.body;
@@ -43,5 +44,9 @@ exports.getInitialData = asyncHandler(async (req, res, next) => {
 
 exports.getProductBySlug = asyncHandler(async (req, res, next) => {
   const { slug } = req.params;
-  res.status(200).send({ slug });
+  const category = await Category.findOne({ slug }).select("_id");
+  if (!category) next(new ErrorResponse("Product does not exist", 400));
+
+  const products = await Product.find({ category: category._id });
+  res.status(200).send({ products });
 });

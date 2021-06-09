@@ -1,13 +1,22 @@
+const aws = require("aws-sdk");
 const multer = require("multer");
-const shortid = require("shortid");
-const path = require("path");
+const multerS3 = require("multer-s3");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(path.dirname(__dirname), "uploads"));
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const storage = multerS3({
+  s3: s3,
+  bucket: "xpresscart-backend",
+  acl: "public-read",
+
+  metadata: function (req, file, cb) {
+    cb(null, { fieldName: file.fieldname });
   },
-  filename: function (req, file, cb) {
-    cb(null, shortid.generate() + "-" + file.originalname);
+  key: function (req, file, cb) {
+    cb(null, Date.now().toString());
   },
 });
 

@@ -1,6 +1,7 @@
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const shortid = require("shortid");
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -16,7 +17,7 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
-    cb(null, Date.now().toString());
+    cb(null, shortid.generate() + "-" + file.originalname);
   },
 });
 

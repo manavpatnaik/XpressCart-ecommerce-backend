@@ -27,7 +27,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
   });
 
   const product = await _product.save();
-  res.status(200).json({ product });
+  res.status(200).json({ product, files: req.files });
 });
 
 exports.getInitialData = asyncHandler(async (req, res, next) => {
